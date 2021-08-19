@@ -79,5 +79,25 @@ namespace Nogada.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   System.Byte[] 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static byte[] keyword {
+            get {
+                object obj = ResourceManager.GetObject("keyword", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Byte[] 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static byte[] keyword2 {
+            get {
+                object obj = ResourceManager.GetObject("keyword2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

@@ -8,12 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace Nogada
 {
   public partial class Form1 : Form
   {
     ImageList imageList = new ImageList();
+    string regexKeyword = string.Empty;
     public Form1()
     {
       InitializeComponent();
@@ -22,6 +24,25 @@ namespace Nogada
       imageList.Images.Add(Properties.Resources.folder_icon);
       imageList.Images.Add(Properties.Resources.file_icon);
       treeView1.ImageList = imageList;
+
+      // 데이터 로드
+      LoadData();
+    }
+
+    private void LoadData()
+    {
+      // 키워드 데이터 로드
+      string keyword = Encoding.Default.GetString(Properties.Resources.keyword);
+      keyword = keyword.Replace("\r\n", ",");
+      string[] keywords = keyword.Split(',');
+      regexKeyword = "(";
+      for(int i=0;i<keywords.Length;i++)
+      {
+        regexKeyword += keywords[i];
+        if (i == keywords.Length - 1) break;
+        regexKeyword += "|";
+      }
+      regexKeyword += ")";
 
     }
 
@@ -80,8 +101,30 @@ namespace Nogada
       RichTextBox textBox = new RichTextBox();
       textBox.Dock = DockStyle.Fill;
       textBox.Parent = page;
+      textBox.BackColor = Color.FromArgb(30, 30, 30);
+      textBox.ForeColor = Color.FromArgb(230, 230, 230);
+      textBox.TextChanged += TextBox_TextChanged;
       textBox.Text = text;
+      TextBox_TextChanged(textBox, new EventArgs());
       tabControl1.TabPages.Add(page);
+    }
+
+    private void TextBox_TextChanged(object sender, EventArgs e)
+    {
+      RichTextBox textBox = (RichTextBox)sender;
+      Regex regex = new Regex(regexKeyword);
+      MatchCollection mc = regex.Matches(textBox.Text);
+
+      int cursorPos = textBox.SelectionStart;
+      foreach(Match m in mc)
+      {
+        int start = m.Index;
+        int len = m.Length;
+
+        textBox.Select(start, len);
+        textBox.SelectionColor = Color.FromArgb(86, 156, 214);
+      }
+      textBox.Select(cursorPos,0);
     }
   }
 }
